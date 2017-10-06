@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "905877423825",
+    "firebase_url": "https://pricedropalert-181519.firebaseio.com",
+    "project_id": "pricedropalert-181519",
+    "storage_bucket": "pricedropalert-181519.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905877423825:android:ede28236fc320659",
+        "android_client_info": {
+          "package_name": "com.pkb149.pricedropalert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905877423825-s7fkrbvggqo4hpsktb2lso9c3pgmsmh6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pkb149.pricedropalert",
+            "certificate_hash": "49e018e526a109cc523bb271eb57fcd4406a53c1"
+          }
+        },
+        {
+          "client_id": "905877423825-ahfvmn9d1ivb3een77niflllm0p0ft3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8ZshGEUwFPlP3xSOwSfw1PrtVx7ZgdT0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905877423825-ahfvmn9d1ivb3een77niflllm0p0ft3h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
