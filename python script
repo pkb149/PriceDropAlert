@@ -1,0 +1,112 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+from firebase import firebase
+import requests
+import json
+import time
+from builtins import str
+from _overlapped import NULL
+
+browser = webdriver.Chrome()#PhantomJS()#Chrome() #replace with .Firefox(), or with the browser of your choice
+
+def getPrice(url,soup):
+    price=int()
+    if "flipkart" in url:
+        oldstr=soup.find("div", class_="_1vC4OE _37U4_g").text.encode('utf-8')[3:]
+        price=oldstr.decode('utf-8').replace(",", "")
+    return price
+
+def sendGCMNotfication(to, name):
+    url = "https://fcm.googleapis.com/fcm/send"
+    headers = {
+            "Authorization": "key=AAAA0uqAhtE:APA91bHtglqilgcUBd6ppuMUMHEUfcbsFMLpiwaoK03_1K3eR1GbKFIjwqcn4T_SlxlpZMULxSARRZ4_DEVn7QIFgsWFuUcJOMLvzwjVo6KDe0ZTShxIXa-tzqOb_NZeuAQx7_1LqNaW",
+            "Content-Type":"application/json"}
+    data={
+        "to" : to, 
+        "data" : {
+            },
+        "notification": {
+        "title": name,
+        "sound": "true",
+        "vibration": "true",
+        "body": "Price of an item has been fallen. Click to view"
+        
+        },
+    }
+    r=requests.post(url, data=json.dumps(data) ,headers=headers);
+    return (r.text);
+
+
+firebase = firebase.FirebaseApplication('https://pricedropalert-181519.firebaseio.com/', None)
+result = firebase.get('/users',None)
+
+for user in result:
+    products=result.get(user).get('products')
+    #print(products)
+    #print(type(products))
+    if type(products)==type(result): 
+        #print(products)    
+        for product in products:
+            #print(products.get(product).get('url'))
+            #TODO get data from crawler 
+            
+            url = products.get(product).get('url')
+            browser.get(url) #navigate to the page
+            innerHTML = browser.execute_script("return document.body.innerHTML")
+            soup = BeautifulSoup(innerHTML, 'html.parser')
+            
+            price=int()
+            price=getPrice(url,soup)
+                
+            millis = int(round(time.time() * 1000))            
+            if products.get(product).get('firstRun')=="true":
+                firebase.put('/users/'+user+'/products/'+product+'/price', millis,price)
+                firebase.put('/users/'+user+'/products/'+product,"firstRun", 'false')
+            else:    
+                #prices=firebase.get('/users/'+user+'/products/'+product+'/price',None)
+                prices=products.get(product).get('price')
+                priceList=list()
+                for pric in prices:
+                    priceList.append(prices.get(pric))
+                #print(priceList)
+                if(price!=""):
+                    if priceList[-1]>price:
+                        print("send Notification")
+                        firebase.put('/users/'+user+'/products/'+product+'/price', millis,price)
+                        to=result.get(user).get('firebase_instance_id')
+                        name='Hi, '+result.get(user).get('name')
+                        sendGCMNotfication(to,name)
+            
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#arr=browser.find_element_by_class_name("s-item-container")
+#browser.find_element_by_css_selector("p.abc")
+#Button = browser.find_element_by_id("pagnNextLink")
+#if Button!=NULL:
+#    Button.click();
+
+
+
+#soup = BeautifulSoup(innerHTML, 'html.parser')
+#products=soup.find_all("div", class_="s-item-container")
+#for product in products:
+#    price=product.find("span", class_="a-size-base a-color-price s-price a-text-bold").text
+#    thumbnail_link=product.find("img", class_="s-access-image cfMarker")["src"]
+#    product_url=product.find("a", class_="a-link-normal s-access-detail-page s-color-twister-title-link a-text-normal")["href"]
+#    product_name=product.find("a", class_="a-link-normal s-access-detail-page s-color-twister-title-link a-text-normal").get("title")
+#    #print(product)
+#    brand=product.contents[2].contents[1].contents[1].text
+#    print(product_name+"\n"+price+" , by "+brand+"\n"+thumbnail_link+"\n"+product_url+"\n")
