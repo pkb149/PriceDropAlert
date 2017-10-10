@@ -4,18 +4,31 @@ from firebase import firebase
 import requests
 import json
 import time
-from builtins import str
-from _overlapped import NULL
+from array import array
 
-browser = webdriver.Chrome()#PhantomJS()#Chrome() #replace with .Firefox(), or with the browser of your choice
+
+browser = webdriver.PhantomJS()#Chrome() #replace with .Firefox(), or with the browser of your choice
 
 def getPrice(url,soup):
     price=int()
     if "flipkart" in url:
         oldstr=soup.find("div", class_="_1vC4OE _37U4_g").text.encode('utf-8')[3:]
         price=oldstr.decode('utf-8').replace(",", "")
-    return price
-
+    if "amazon" in url:
+        #do nothing
+        print()
+    #return price
+    return "955"
+def getDesc(url,soup):
+    desc=list()
+    if "flipkart" in url:
+        desc.append(soup.find("img", class_="sfescn")['src'])
+        desc.append(soup.find("h1", class_="_3eAQiD").text)
+    if "amazon" in url:
+        #do nothing
+        print()
+    print(desc)
+    return desc
 def sendGCMNotfication(to, name):
     url = "https://fcm.googleapis.com/fcm/send"
     headers = {
@@ -29,7 +42,7 @@ def sendGCMNotfication(to, name):
         "title": name,
         "sound": "true",
         "vibration": "true",
-        "body": "Price of an item has been fallen. Click to view"
+        "body": "Price of an item has fallen. Click to view"
         
         },
     }
@@ -60,22 +73,29 @@ for user in result:
                 
             millis = int(round(time.time() * 1000))            
             if products.get(product).get('firstRun')=="true":
-                firebase.put('/users/'+user+'/products/'+product+'/price', millis,price)
-                firebase.put('/users/'+user+'/products/'+product,"firstRun", 'false')
+                #get other details from soup. Create a new method for that.
+                desc=getDesc(url,soup)
+                if desc:                    
+                    print(desc)
+                    firebase.put('/users/'+user+'/products/'+product,"oldPrice", price)
+                    firebase.put('/users/'+user+'/products/'+product,"newPrice", price)
+                    firebase.put('/users/'+user+'/products/'+product,"firstRun", 'false')
+                    firebase.put('/users/'+user+'/products/'+product,"imgUrl", desc[0])
+                    firebase.put('/users/'+user+'/products/'+product,"prodName", desc[1])
+                
             else:    
                 #prices=firebase.get('/users/'+user+'/products/'+product+'/price',None)
-                prices=products.get(product).get('price')
-                priceList=list()
-                for pric in prices:
-                    priceList.append(prices.get(pric))
-                #print(priceList)
+                oldPrice=products.get(product).get('oldPrice')
                 if(price!=""):
-                    if priceList[-1]>price:
+                    #print(priceList[-1]+'\n'+price)
+                    if int(oldPrice)>int(price):
                         print("send Notification")
-                        firebase.put('/users/'+user+'/products/'+product+'/price', millis,price)
+                        firebase.put('/users/'+user+'/products/'+product,'newPrice',price)
                         to=result.get(user).get('firebase_instance_id')
                         name='Hi, '+result.get(user).get('name')
-                        sendGCMNotfication(to,name)
+                        firebase.put('/users/'+user+'/notifications',str(millis),str(product))
+                        if to!="NULL":
+                            sendGCMNotfication(to,name)
             
     
 
