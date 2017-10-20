@@ -1,6 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.pkb149.SVT.MainActivity">
+    <item android:id="@+id/action_notifications" android:title="@string/action_notifications"
+        android:orderInCategory="100" app:showAsAction="never"
+        />
+    <item android:id="@+id/action_dashboard" android:title="@string/action_dashboard"
+        android:orderInCategory="100" app:showAsAction="never"
+        />
     <item android:id="@+id/action_logout" android:title="@string/action_logout"
         android:orderInCategory="100" app:showAsAction="never"
         />

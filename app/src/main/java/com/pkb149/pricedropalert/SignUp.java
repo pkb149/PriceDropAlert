@@ -142,8 +142,8 @@ public class SignUp extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id==android.R.id.home){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            onBackPressed();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

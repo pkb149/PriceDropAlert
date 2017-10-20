@@ -23,12 +23,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="72dp"
+        android:layout_height="96dp"
         android:layout_marginBottom="24dp"
         android:text="APP LOGO"
         android:textSize="40dp"
+        android:src="@drawable/logo"
         android:textStyle="bold"
         tools:fontFamily="sans-serif-condensed"
         android:layout_gravity="center_horizontal" />

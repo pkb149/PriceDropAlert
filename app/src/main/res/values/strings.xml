@@ -3,5 +3,7 @@
     <string name="facebook_app_id">178801209357549</string>
     <string name="fb_login_protocol_scheme">fb178801209357549</string>
     <string name="action_logout">Logout</string>
+    <string name="action_dashboard">Submitted Products</string>
+    <string name="action_notifications">Notifications</string>
 
 </resources>

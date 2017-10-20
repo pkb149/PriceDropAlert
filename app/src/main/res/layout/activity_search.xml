@@ -23,11 +23,12 @@
         xmlns:tools="http://schemas.android.com/tools">
 
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="72dp"
+            android:layout_height="96dp"
             android:layout_marginBottom="24dp"
             android:text="APP LOGO"
+            android:src="@drawable/logo"
             android:textSize="40dp"
             android:textStyle="bold"
             tools:fontFamily="sans-serif-condensed"
@@ -54,5 +55,17 @@
             android:background="@color/light_green"
             android:text="Submit"/>
     </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        <!-- my ad unit Id: ca-app-pub-7059442386503248/2164221150    replace before production-->
+    </com.google.android.gms.ads.AdView>
 
 </android.support.percent.PercentRelativeLayout>

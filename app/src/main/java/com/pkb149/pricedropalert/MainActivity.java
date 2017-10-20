@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                                         String email = object.optString("email");
                                         Log.e(TAG,email);
                                         mDatabase.child("users").child(profile.getId()).child("email").setValue(email);
-                                        mDatabase.child("userss").child(profile.getId()).setValue(email);
+                                        mDatabase.child("userss").child(profile.getId()).child("email").setValue(email);
                                     }
                                 }
                             });
