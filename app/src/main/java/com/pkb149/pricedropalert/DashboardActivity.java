@@ -67,7 +67,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerView
             }
         });
 
-        adapter = new RecyclerViewAdapter(data, getApplicationContext(),this);
+        adapter = new RecyclerViewAdapter(data, this,this);
         _recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getApplicationContext());
         _recyclerView.setLayoutManager(linearLayoutManager);
@@ -93,6 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerView
                         cardViewData.setProduct_tracking_id(messageSnapshot.getKey());
                         cardViewData.setOldPrice(messageSnapshot.child("oldPrice").getValue().toString());
                         cardViewData.setNewPrice(messageSnapshot.child("newPrice").getValue().toString());
+                        cardViewData.setProduct_tracking_id(messageSnapshot.getKey());
                         adapter.add(cardViewData);
                         //cardViewData.setPrice(messageSnapshot.child("price").getChildren());
                     }

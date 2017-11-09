@@ -1,19 +1,28 @@
 package com.pkb149.pricedropalert;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.pkb149.pricedropalert.Utility.PrefManager;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import java.util.List;
@@ -77,10 +86,40 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.oldPrice.setText(cardViewDatas.get(position).getOldPrice());
         holder.newPrice.setText(cardViewDatas.get(position).getNewPrice());
 
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                builder.setTitle("Are you sure?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PrefManager prefManager=new PrefManager(context);
+                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                        mDatabase.child("users")
+                                .child(prefManager.getUserssId())
+                                .child("products")
+                                .child(cardViewDatas.get(position).getProduct_tracking_id())
+                                .removeValue();
+                                //.setValue("NULL");
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                final AlertDialog ad=builder.create();
+                //ad.getWindow().setBackgroundDrawableResource(R.color.primary_dark);
+                builder.show();
+            }
+        });
+
         holder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),cardViewDatas.get(position).getUrl(), Toast.LENGTH_LONG).show();
+                Uri uri = Uri.parse(cardViewDatas.get(position).getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
             }
         });
     }
@@ -129,6 +168,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         CardView cv;
         ImageView more;
         Button buy;
+        Button delete;
         ImageView imageView;
         TextView productName;
         TextView oldPrice;
@@ -137,8 +177,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public NewsViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cardView);
-            more = (ImageView) itemView.findViewById(R.id.more_iv);
             buy = (Button) itemView.findViewById(R.id.buy_now_button);
+            delete = (Button) itemView.findViewById(R.id.delete_product);
             imageView=(ImageView) itemView.findViewById(R.id.viewGif);
             productName=(TextView)itemView.findViewById(R.id.product_name);
             oldPrice=(TextView)itemView.findViewById(R.id.price);

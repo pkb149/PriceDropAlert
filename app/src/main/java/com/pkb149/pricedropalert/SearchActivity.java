@@ -123,7 +123,9 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if(prefManager.isLoggedIn()) {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        }
         return true;
     }
 
@@ -179,12 +181,12 @@ public void submitForAlert(String website, URL url) {
             .child(timeinmillies)
             .child("url")
             .setValue(url.toString());
-   /*mDatabase.child("users")
+    mDatabase.child("users")
             .child(prefManager.getUserssId())
             .child("products")
             .child(timeinmillies)
-            .child("website")
-            .setValue(website);*/
+            .child("runId")
+            .setValue("0");
     mDatabase.child("users")
             .child(prefManager.getUserssId())
             .child("products")
@@ -195,6 +197,7 @@ public void submitForAlert(String website, URL url) {
         public void onSuccess(Void aVoid) {
             mInterstitialAd.show();
             tv.setText("");
+            Toast.makeText(getApplicationContext(),"Product has been submitted for tracking.",Toast.LENGTH_LONG).show();
         }
     });
 }

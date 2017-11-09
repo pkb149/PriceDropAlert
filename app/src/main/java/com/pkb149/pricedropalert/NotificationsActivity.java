@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -114,14 +115,20 @@ public class NotificationsActivity extends AppCompatActivity implements Recycler
             }
         });
     }
-
+    private static final int MENU_CLEAR_NOT = Menu.FIRST + 4;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.add(0,MENU_CLEAR_NOT, Menu.NONE, "Clear Notification");
         MenuItem item = menu.findItem(R.id.action_notifications);
         item.setVisible(false);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -163,6 +170,9 @@ public class NotificationsActivity extends AppCompatActivity implements Recycler
             onBackPressed();
             finish();
             return true;
+        }
+        else if(id==MENU_CLEAR_NOT){
+            Toast.makeText(getApplicationContext(),"clicked",Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
