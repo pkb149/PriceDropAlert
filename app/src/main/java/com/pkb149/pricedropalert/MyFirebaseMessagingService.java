@@ -10,6 +10,8 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import static com.pkb149.pricedropalert.R.id.notification;
+
 /**
  * Created by CoderGuru on 06-10-2017.
  */
@@ -31,9 +33,10 @@ public class MyFirebaseMessagingService  extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-        /*NotificationManager notificationManager = (NotificationManager) getApplicationContext()
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext()
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(getResources().getDrawable(R.id.));
+        Notification notification= new Notification();
+        //Notification notification = new Notification(getResources().getDrawable(R.drawable.logo));
 
         Intent notificationIntent = new Intent(getApplicationContext(), NotificationsActivity.class);
 
@@ -46,7 +49,9 @@ public class MyFirebaseMessagingService  extends FirebaseMessagingService {
         //notification.setLatestEventInfo(getApplicationContext(), intent);
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(0, notification);
-*/
+
+
+
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }

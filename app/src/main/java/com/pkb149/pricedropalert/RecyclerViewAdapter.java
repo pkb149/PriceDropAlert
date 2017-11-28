@@ -115,7 +115,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),cardViewDatas.get(position).getUrl(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),cardViewDatas.get(position).getUrl(), Toast.LENGTH_LONG).show();
                 Uri uri = Uri.parse(cardViewDatas.get(position).getUrl());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

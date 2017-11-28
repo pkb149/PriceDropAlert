@@ -78,7 +78,7 @@ public class SignUp extends AppCompatActivity {
                                         email=email.replace(".", "");
                                         prefManager.setLoggedIn(email);
                                         mDatabase = FirebaseDatabase.getInstance().getReference();
-                                        mDatabase.child("userss").child(email).setValue(user.getEmail());
+                                        mDatabase.child("userss").child(email).child("email").setValue(user.getEmail());
                                         mDatabase.child("users").child(email).child("name").setValue(nameET.getText().toString());
                                         mDatabase.child("users").child(email).child("email").setValue(user.getEmail());
                                         loader.setVisibility(View.INVISIBLE);

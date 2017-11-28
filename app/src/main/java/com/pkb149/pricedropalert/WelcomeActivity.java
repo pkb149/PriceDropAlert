@@ -1,5 +1,7 @@
 package com.pkb149.pricedropalert;
 
+import android.media.Image;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Context;
@@ -16,8 +18,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.pkb149.pricedropalert.Utility.PrefManager;
 
@@ -139,7 +143,7 @@ public class WelcomeActivity extends AppCompatActivity {
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
-                btnNext.setText("SKIP");
+                btnNext.setText("DONE");
                 btnSkip.setVisibility(View.GONE);
             } else {
                 // still pages are left
@@ -190,6 +194,7 @@ public class WelcomeActivity extends AppCompatActivity {
             View view = layoutInflater.inflate(layouts[position], container, false);
             container.addView(view);
             if(position==1) {
+
             }
             else if(position==2){
 

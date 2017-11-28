@@ -73,7 +73,10 @@
         <activity
             android:name=".DashboardActivity"
             android:theme="@style/AppTheme_ActionBar" />
-        <activity android:name=".NotificationsActivity"
+        <activity
+            android:name=".NotificationsActivity"
+            android:theme="@style/AppTheme_ActionBar" />
+        <activity android:name=".ForgotPassword"
             android:theme="@style/AppTheme_ActionBar"></activity>
     </application>
 

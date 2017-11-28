@@ -1,12 +1,16 @@
 package com.pkb149.pricedropalert;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Parcel;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,17 +32,18 @@ import com.pkb149.pricedropalert.Utility.PrefManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsActivity extends AppCompatActivity implements RecyclerViewAdapter.NewsListItemClickListener{
+public class NotificationsActivity extends AppCompatActivity implements NotificationsRecyclerViewAdapter.NotificationsListItemClickListener{
     PrefManager prefManager;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private AdView mAdView;
-    List<CardViewData> data;
-    RecyclerViewAdapter adapter;
+    List<NotificationsCardViewData> data;
+    NotificationsRecyclerViewAdapter adapter;
     RecyclerView _recyclerView;
-    CardViewData cardViewData;
+    NotificationsCardViewData cardViewData;
     SwipeRefreshLayout swipeRefreshLayout;
     String TAG="NotificationsActivity";
+    DatabaseReference notifRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,44 +73,33 @@ public class NotificationsActivity extends AppCompatActivity implements Recycler
             }
         });
 
-        adapter = new RecyclerViewAdapter(data, getApplicationContext(),this);
+        adapter = new NotificationsRecyclerViewAdapter(data, this,this);
         _recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager= new LinearLayoutManager(getApplicationContext());
         _recyclerView.setLayoutManager(linearLayoutManager);
 
-        final DatabaseReference notifRef =mDatabase.child("users").child(prefManager.getUserssId()).child("notifications");
+        notifRef =mDatabase.child("users").child(prefManager.getUserssId()).child("notifications");
         notifRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG,"onDataChange Called");
+                adapter.clear();
                     for(DataSnapshot notificationSnapshot : dataSnapshot.getChildren()){
-                        final DatabaseReference productsRef
-                                =mDatabase.child("users")
-                                .child(prefManager.getUserssId())
-                                .child("products")
-                                .child(notificationSnapshot.getValue().toString());
-                        Log.d(TAG,"Notifcation Id: "+notificationSnapshot.getValue().toString());
-                                productsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Log.d(TAG,"Fetching Product Details:");
-                                        cardViewData= new CardViewData(Parcel.obtain());
-                                        if(dataSnapshot.child("imgUrl").getValue()!=null) {
-                                            cardViewData.setUrlToImage(dataSnapshot.child("imgUrl").getValue().toString());
-                                            cardViewData.setProductName(dataSnapshot.child("prodName").getValue().toString());
-                                            cardViewData.setUrl(dataSnapshot.child("url").getValue().toString());
-                                            cardViewData.setProduct_tracking_id(dataSnapshot.getKey());
-                                            cardViewData.setOldPrice(dataSnapshot.child("oldPrice").getValue().toString());
-                                            cardViewData.setNewPrice(dataSnapshot.child("newPrice").getValue().toString());
-                                            adapter.add(cardViewData);
-                                        }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
+                        cardViewData= new NotificationsCardViewData(Parcel.obtain());
+                        if(notificationSnapshot.child("imgUrl").getValue()!=null
+                                &&notificationSnapshot.child("prodName").getValue()!=null
+                                &&notificationSnapshot.child("url").getValue()!=null
+                                &&notificationSnapshot.child("msg").getValue()!=null){
 
-                                    }
-                                });
+                            cardViewData.setUrlToImage(notificationSnapshot.child("imgUrl").getValue().toString());
+                            cardViewData.setProductName(notificationSnapshot.child("prodName").getValue().toString());
+                            cardViewData.setUrl(notificationSnapshot.child("url").getValue().toString());
+                            cardViewData.setNotification_id(notificationSnapshot.getKey());
+                            cardViewData.setNotificationText(notificationSnapshot.child("msg").getValue().toString());
+                            data.add(0,cardViewData);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
             }
 
@@ -114,6 +108,25 @@ public class NotificationsActivity extends AppCompatActivity implements Recycler
 
             }
         });
+
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //long id=(long)viewHolder.itemView.getTag();
+                //mAdapter.swapCursor(getAllGuests());
+                //adapter.remove(viewHolder.getAdapterPosition());
+                notifRef.child(data.get(viewHolder.getAdapterPosition()).getNotification_id()).removeValue();
+                data.remove(viewHolder.getAdapterPosition());
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(),"Deleted",Toast.LENGTH_LONG).show();
+            }
+        }).attachToRecyclerView(_recyclerView);
     }
     private static final int MENU_CLEAR_NOT = Menu.FIRST + 4;
     @Override
@@ -172,7 +185,27 @@ public class NotificationsActivity extends AppCompatActivity implements Recycler
             return true;
         }
         else if(id==MENU_CLEAR_NOT){
-            Toast.makeText(getApplicationContext(),"clicked",Toast.LENGTH_SHORT).show();
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(NotificationsActivity.this);
+
+            builder.setTitle("Are you sure you want to clear all notification?\n You can clear indvidual notifications by swiping them right.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mDatabase.child("users")
+                            .child(prefManager.getUserssId())
+                            .child("notifications")
+                            .removeValue();
+                    adapter.clear();
+                    //.setValue("NULL");
+                }
+            });
+            builder.setNegativeButton("Cancel", null);
+            final AlertDialog ad=builder.create();
+            //ad.getWindow().setBackgroundDrawableResource(R.color.primary_dark);
+            builder.show();
+            //Toast.makeText(getApplicationContext(),"clicked",Toast.LENGTH_SHORT).show();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,6 +213,15 @@ public class NotificationsActivity extends AppCompatActivity implements Recycler
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-
+        Uri uri = Uri.parse(data.get(clickedItemIndex).getUrl());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        //Toast.makeText(getApplicationContext(),String.valueOf(clickedItemIndex),Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onNewIntent(Intent intent){
+        Bundle extras = intent.getExtras();
+        Toast.makeText(getApplicationContext(),"notification clicked",Toast.LENGTH_LONG).show();
     }
 }

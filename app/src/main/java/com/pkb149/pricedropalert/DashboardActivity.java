@@ -86,7 +86,10 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerView
                 adapter.clear();
                 for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                     cardViewData= new CardViewData(Parcel.obtain());
-                    if(messageSnapshot.child("imgUrl").exists()){
+                    if(messageSnapshot.child("imgUrl").exists()
+                            &&messageSnapshot.child("prodName").exists()
+                            &&messageSnapshot.child("oldPrice").exists()
+                            &&messageSnapshot.child("newPrice").exists()){
                         cardViewData.setUrlToImage(messageSnapshot.child("imgUrl").getValue().toString());
                         cardViewData.setProductName(messageSnapshot.child("prodName").getValue().toString());
                         cardViewData.setUrl(messageSnapshot.child("url").getValue().toString());
@@ -94,7 +97,9 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerView
                         cardViewData.setOldPrice(messageSnapshot.child("oldPrice").getValue().toString());
                         cardViewData.setNewPrice(messageSnapshot.child("newPrice").getValue().toString());
                         cardViewData.setProduct_tracking_id(messageSnapshot.getKey());
-                        adapter.add(cardViewData);
+                        //adapter.add(cardViewData);
+                        data.add(0,cardViewData);
+                        adapter.notifyDataSetChanged();
                         //cardViewData.setPrice(messageSnapshot.child("price").getChildren());
                     }
 

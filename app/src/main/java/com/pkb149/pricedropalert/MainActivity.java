@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Button emailLoginButton;
     ProgressBar loader;
     Button signupButton;
+    Button forgotPasswordBtn;
 
 
     @Override
@@ -61,15 +62,17 @@ public class MainActivity extends AppCompatActivity {
         emailLoginButton=(Button)findViewById(R.id.email_login_button);
         loader=(ProgressBar) findViewById(R.id.loader);
         signupButton=(Button)findViewById(R.id.signup_btn);
+        forgotPasswordBtn=(Button) findViewById(R.id.forgot_password_btn);
 
 
-        //FIrebase auth (email/pass) instnace.
+        //Firebase auth (email/pass) instance.
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (prefManager.isLoggedIn()) {
-                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         Intent receivedIntent = getIntent();
@@ -164,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(MainActivity.this,ForgotPassword.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 

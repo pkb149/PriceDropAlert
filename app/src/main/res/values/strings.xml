@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PriceDropAlert</string>
+    <string name="app_name">Price Drop Alert</string>
     <string name="facebook_app_id">178801209357549</string>
     <string name="fb_login_protocol_scheme">fb178801209357549</string>
     <string name="action_logout">Logout</string>
