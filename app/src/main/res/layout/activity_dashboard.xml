@@ -53,8 +53,9 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        ads:adUnitId="ca-app-pub-7059442386503248/2164221150">
         <!-- my ad unit Id: ca-app-pub-7059442386503248/2164221150    replace before production-->
+        <!-- test ad unit Id: ca-app-pub-3940256099942544/6300978111   replace before production-->
     </com.google.android.gms.ads.AdView>
 
 

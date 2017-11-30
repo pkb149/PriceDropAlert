@@ -59,7 +59,11 @@ public class SearchActivity extends AppCompatActivity {
 
         //Interstitial Ad
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+
+        //Test Ad
+        //mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        //Real Ad
+        mInterstitialAd.setAdUnitId("ca-app-pub-7059442386503248/6196811410");
         //my AdUnitId: ca-app-pub-7059442386503248/6196811410
         //replace before production
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -93,21 +97,20 @@ public class SearchActivity extends AppCompatActivity {
                     String enteredString=tv.getText().toString();
                     String[] urlString=enteredString.split("\\s");
                     URL url=null;
-
+                    for (String item : urlString) {
                         try {
-                            url = new URL(urlString[urlString.length-1]);
+                            url = new URL(item);
 
                         } catch (Exception exception) {
 
                         }
-                        finally{
+                    }
                             if(url==null){
                                 Toast.makeText(getApplicationContext(),"Invalid URL",Toast.LENGTH_LONG).show();
-                            }else{
-                                    Toast.makeText(getApplicationContext(),"Submitting url for tracking...",Toast.LENGTH_LONG).show();
-                                    submitForAlert("Flipkart",url);
+                            }else {
+                                //Toast.makeText(getApplicationContext(),"Submitting url for tracking...",Toast.LENGTH_LONG).show();
+                                submitForAlert(url);
                             }
-                        }
                 }else{
                     Toast.makeText(getApplicationContext(),"Log in to start tracking.",Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -173,7 +176,7 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-public void submitForAlert(String website, URL url) {
+public void submitForAlert(URL url) {
     String timeinmillies = Long.toString(System.currentTimeMillis());
     mDatabase.child("users")
             .child(prefManager.getUserssId())
