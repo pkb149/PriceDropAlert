@@ -41,11 +41,25 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
         if (!prefManager.isFirstTimeLaunch()) {
-            launchHomeScreen();
-            finish();
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null && bundle.get("data")!=null){
+            //if (bundle != null && bundle.get("gcm.notification.e")!=null) {
+                Intent intent=new Intent(WelcomeActivity.this, NotificationsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            }
+            else{
+                launchHomeScreen();
+                finish();
+            }
+
         }
 
         // Making notification bar transparent

@@ -20,6 +20,7 @@
 
         <activity
             android:name=".SearchActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme_ActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -75,7 +76,7 @@
             android:name=".NotificationsActivity"
             android:theme="@style/AppTheme_ActionBar" />
         <activity android:name=".ForgotPassword"
-            android:theme="@style/AppTheme_ActionBar"></activity>
+            android:theme="@style/AppTheme_ActionBar"/>
     </application>
 
 </manifest>
