@@ -162,7 +162,6 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerView
                 // email logout
                 mAuth.signOut();
             }
-
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

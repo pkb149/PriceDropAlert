@@ -1,4 +1,18 @@
 package com.pkb149.pricedropalert;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.util.Patterns;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.evernote.android.job.JobRequest;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -19,21 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.pkb149.pricedropalert.Utility.PrefManager;
-
-
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.Patterns;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity {
     CallbackManager mCallbackManager;
@@ -89,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
 
                 if(Profile.getCurrentProfile() == null) {
-                    mProfileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+                            mProfileTracker = new ProfileTracker() {
+                                @Override
+                                protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
                             Log.v("facebook - profile", currentProfile.getFirstName());
                             mProfileTracker.stopTracking();
                             onLoginSuccess(loginResult,  currentProfile);
@@ -189,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
     void onLoginSuccess(final LoginResult loginResult, final Profile profile){
         //final Profile profile = Profile.getCurrentProfile();
         Log.e(TAG,profile.getId());
-
         prefManager.setLoggedIn(profile.getId());
         mDatabase.child("userss").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -254,7 +254,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 passwordET.setError(null);
             }
-
             return valid;
     }
+
+
 }

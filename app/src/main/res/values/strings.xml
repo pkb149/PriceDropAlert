@@ -5,5 +5,6 @@
     <string name="action_logout">Logout</string>
     <string name="action_dashboard">Submitted Products</string>
     <string name="action_notifications">Notifications</string>
-
+    <string name="amazon_api_access_key">AKIAIUWFWXYTSTV5YFMQ</string>
+    <string name="amazon_api_secret">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</string>
 </resources>

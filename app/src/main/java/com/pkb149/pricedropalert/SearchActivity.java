@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +25,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.pkb149.pricedropalert.Utility.AmazonSignatureCalc;
 import com.pkb149.pricedropalert.Utility.PrefManager;
 
 import java.net.URL;
+
+import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
     PrefManager prefManager;
@@ -37,6 +43,7 @@ public class SearchActivity extends AppCompatActivity {
     static EditText tv;
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+    ProgressBar loader;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         prefManager=new PrefManager(this);
@@ -45,6 +52,7 @@ public class SearchActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         tv=(EditText) findViewById(R.id.link);
         Button submit=(Button) findViewById(R.id.submit);
+        loader =(ProgressBar) findViewById(R.id.loader_search);
         Intent receivedIntent = getIntent();
         String receivedAction = receivedIntent.getAction();
         mAuth = FirebaseAuth.getInstance();
@@ -156,7 +164,6 @@ public class SearchActivity extends AppCompatActivity {
                 // email logout
                 mAuth.signOut();
             }
-
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -177,7 +184,18 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 public void submitForAlert(URL url) {
+
+    loader.setVisibility(View.VISIBLE);
     String timeinmillies = Long.toString(System.currentTimeMillis());
+    final String urlString=url.toString();
+    if(urlString.contains("amazon.in")){
+        mDatabase.child("users")
+                .child(prefManager.getUserssId())
+                .child("products")
+                .child(timeinmillies)
+                .child("website")
+                .setValue(url.toString());
+    }
     mDatabase.child("users")
             .child(prefManager.getUserssId())
             .child("products")
@@ -198,6 +216,7 @@ public void submitForAlert(URL url) {
             .setValue("true").addOnSuccessListener(SearchActivity.this, new OnSuccessListener<Void>() {
         @Override
         public void onSuccess(Void aVoid) {
+            loader.setVisibility(View.INVISIBLE);
             mInterstitialAd.show();
             tv.setText("");
             Toast.makeText(getApplicationContext(),"Product has been submitted for tracking.",Toast.LENGTH_LONG).show();
